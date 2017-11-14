@@ -24,4 +24,31 @@ public class User implements Serializable {
     private String name;
 
     private String password;
+
+    public static Builder getBuilder() {
+        return new User().new Builder();
+    }
+
+    public class Builder {
+
+        public Builder account(String account) {
+            User.this.account = account;
+            return this;
+        }
+
+        public Builder name(String name) {
+            User.this.name = name;
+            return this;
+        }
+
+        public Builder password(String password) {
+            User.this.password = password;
+            return this;
+        }
+
+        public User build() {
+            return User.this;
+        }
+
+    }
 }

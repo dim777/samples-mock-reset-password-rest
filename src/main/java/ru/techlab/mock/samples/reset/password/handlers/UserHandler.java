@@ -3,6 +3,7 @@ package ru.techlab.mock.samples.reset.password.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -53,7 +54,8 @@ public class UserHandler {
     public Mono<ServerResponse> checkUser(ServerRequest serverRequest) {
         Mono<AccountRequest> accountRequest = serverRequest.bodyToMono(AccountRequest.class);
         Mono<User> user = userRepository.findByAccount(accountRequest.map(a -> a.getAccountId()));
-        return ServerResponse.ok()
+        return ServerResponse
+                .ok()
                 .body(user, User.class);
     }
 }
