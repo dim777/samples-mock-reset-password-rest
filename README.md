@@ -1,0 +1,1 @@
+--spring.config.name="file:/path/to/application.yml"
