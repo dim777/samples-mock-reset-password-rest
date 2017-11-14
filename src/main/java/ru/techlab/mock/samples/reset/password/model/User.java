@@ -1,5 +1,6 @@
 package ru.techlab.mock.samples.reset.password.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,7 +16,8 @@ import java.io.Serializable;
 @Document
 public class User implements Serializable {
     @Id
-    private String id;
+    @JsonIgnore
+    private Object id;
 
     private String account;
 
