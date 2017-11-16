@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.techlab.mock.samples.reset.password.model.User;
+import ru.techlab.mock.samples.reset.password.model.wrapper.AccountRequest;
 import ru.techlab.mock.samples.reset.password.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,14 +70,7 @@ public class SamplesResetPasswordRestApplicationTests {
 	@Test
 	public void givenNewUserForm_whenDataIsValid_thenSuccess(){
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>(8);
-		formData.add("title", "Title 1");
-		formData.add("alias", "title-1");
-		formData.add("fulltext", "Fulltext fulltext");
-		formData.add("created", "01-01-2017");
-		formData.add("publish", "true");
-		formData.add("createdBy", "dim777");
-		formData.add("image", "");
-		formData.add("language", "RU");
+		User.getBuilder().account("zrb052775").name("D Test 0").password("111222").build();
 
 		webTestClient.post().uri("/user")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -91,20 +85,12 @@ public class SamplesResetPasswordRestApplicationTests {
 	 */
 	@Test
 	public void givenNewUser_whenDataIsValid_thenSuccess(){
-		Article article = new Article();
-		article.setId(4L);
-		article.setTitle("Title 2");
-		article.setAlias("title-2");
-		article.setFulltext("Fulltext fulltext");
-		article.setCreated("01-02-2017");
-		article.setPublish(true);
-		article.setCreatedBy("dim777");
-		article.setImage(null);
-		article.setLanguage(Lang.EN);
+		AccountRequest accountRequest = new AccountRequest();
+		accountRequest.setAccountId("zrb052775");
 
 		webTestClient.post()
-				.uri("/article/json")
-				.body(fromObject(article))
+				.uri("/users/check")
+				.body(fromObject(accountRequest))
 				.exchange()
 				.expectStatus().isOk();
 	}

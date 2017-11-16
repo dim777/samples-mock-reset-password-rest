@@ -47,7 +47,7 @@ public class UserHandler {
 
     public Mono<ServerResponse> createUser(ServerRequest serverRequest) {
         Flux<User> user = serverRequest.bodyToFlux(User.class);
-        userRepository.insert(user).subscribe();
+        userRepository.insert(user);
         return ServerResponse.ok().build();
     }
 
