@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.techlab.mock.samples.reset.password.model.User;
 import ru.techlab.mock.samples.reset.password.model.wrapper.AccountRequest;
+import ru.techlab.mock.samples.reset.password.model.wrapper.PasswordRequest;
 import ru.techlab.mock.samples.reset.password.repository.UserRepository;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -54,8 +55,20 @@ public class UserHandler {
     public Mono<ServerResponse> checkUser(ServerRequest serverRequest) {
         Mono<AccountRequest> accountRequest = serverRequest.bodyToMono(AccountRequest.class);
         Mono<User> user = userRepository.findByAccount(accountRequest.map(a -> a.getAccountId()));
-        return ServerResponse
+        return user.then(ServerResponse.ok().body(user, User.class));
+        /*return ServerResponse
                 .ok()
-                .body(user, User.class);
+                .body(user, User.class);*/
+    }
+
+    public Mono<ServerResponse> changePwd(ServerRequest serverRequest) {
+        Mono<PasswordRequest> passwordRequest = serverRequest.bodyToMono(PasswordRequest.class);
+        Mono<User> user = userRepository
+                .findByAccount(passwordRequest.map(a -> a.getAccountId()));
+
+        return user.then(ServerResponse.ok().body(user, User.class));
+        /*return ServerResponse
+                .ok()
+                .body(user, User.class);*/
     }
 }

@@ -3,8 +3,11 @@ spring:
     mongodb:
       host: 10.45.250.101
       port: 9017
-      database: user_db
-      username: user_db_usr
+      database: user_test_db
+      username: user_test_db_usr
+
+app:
+  changelog: ru.techlab.mock.samples.reset.password.changelogs.test
 
 logging:
   level:

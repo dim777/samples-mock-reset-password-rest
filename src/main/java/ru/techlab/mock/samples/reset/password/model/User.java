@@ -24,6 +24,7 @@ public class User implements Serializable {
 
     private String name;
 
+    @JsonIgnore
     private String password;
 
     public static Builder getBuilder() {

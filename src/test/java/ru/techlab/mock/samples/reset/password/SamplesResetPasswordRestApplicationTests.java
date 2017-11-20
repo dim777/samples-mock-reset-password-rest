@@ -18,6 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.techlab.mock.samples.reset.password.model.User;
 import ru.techlab.mock.samples.reset.password.model.wrapper.AccountRequest;
+import ru.techlab.mock.samples.reset.password.model.wrapper.PasswordRequest;
 import ru.techlab.mock.samples.reset.password.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,24 +34,6 @@ public class SamplesResetPasswordRestApplicationTests {
 	@Autowired private ReactiveMongoOperations operations;
 	@Autowired private UserRepository userRepository;
 
-	@Before
-	public void setUp() {
-		operations.collectionExists(User.class) //
-				.flatMap(exists -> exists ? operations.dropCollection(User.class) : Mono.just(exists)) //
-				.flatMap(o -> operations.createCollection(User.class, CollectionOptions.empty().size(1024 * 1024).maxDocuments( 100).capped())) //
-				.then() //
-				.block();
-
-		userRepository
-				.saveAll(Flux.just(
-						User.getBuilder().account("zrb052775").name("D Test 0").password("111222").build(), //
-						User.getBuilder().account("zrb052776").name("D Test 1").password("111222").build(), //
-						User.getBuilder().account("zrb052777").name("D Test 2").password("111222").build())) //
-				.then() //
-				.block();
-
-	}
-
 	@Test
 	public void givenRouter_whenGetUsers_thenGotArticlesList() {
 		webTestClient
@@ -61,7 +44,7 @@ public class SamplesResetPasswordRestApplicationTests {
 				.expectStatus().isOk()
 				.expectHeader().contentType(MediaType.APPLICATION_JSON)
 				.expectBodyList(User.class)
-				.hasSize(2)
+				.hasSize(3)
 				.consumeWith(allArticles -> assertThat(allArticles)
 						.satisfies(article -> assertThat(article.getResponseBody().size()).isPositive()));
 
@@ -70,9 +53,9 @@ public class SamplesResetPasswordRestApplicationTests {
 	@Test
 	public void givenNewUserForm_whenDataIsValid_thenSuccess(){
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>(8);
-		User.getBuilder().account("zrb052775").name("D Test 0").password("111222").build();
+		User.getBuilder().account("tzrb052775").name("D Test 0").password("111222").build();
 
-		webTestClient.post().uri("/user")
+		webTestClient.post().uri("/users")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters.fromFormData(formData))
 				.exchange()
@@ -86,11 +69,24 @@ public class SamplesResetPasswordRestApplicationTests {
 	@Test
 	public void givenNewUser_whenDataIsValid_thenSuccess(){
 		AccountRequest accountRequest = new AccountRequest();
-		accountRequest.setAccountId("zrb052775");
+		accountRequest.setAccountId("tzrb052775");
 
 		webTestClient.post()
 				.uri("/users/check")
 				.body(fromObject(accountRequest))
+				.exchange()
+				.expectStatus().isOk();
+	}
+
+	@Test
+	public void givenExistingUser_changePwd_thenSuccess(){
+		PasswordRequest passwordRequest = new PasswordRequest();
+		passwordRequest.setAccountId("tzrb052775");
+		passwordRequest.setPassword("333111");
+
+		webTestClient.post()
+				.uri("/users/pwd")
+				.body(fromObject(passwordRequest))
 				.exchange()
 				.expectStatus().isOk();
 	}

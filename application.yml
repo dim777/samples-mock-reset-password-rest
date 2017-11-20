@@ -9,6 +9,9 @@ spring:
       database: user_db
       username: user_db_usr
 
+app:
+  changelog: ru.techlab.mock.samples.reset.password.changelogs
+
 logging:
   level:
     org.springframework.data: debug
