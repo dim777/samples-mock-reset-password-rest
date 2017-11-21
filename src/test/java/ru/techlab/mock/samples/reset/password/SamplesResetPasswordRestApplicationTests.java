@@ -75,7 +75,9 @@ public class SamplesResetPasswordRestApplicationTests {
 				.uri("/users/check")
 				.body(fromObject(accountRequest))
 				.exchange()
-				.expectStatus().isOk();
+				.expectStatus().isOk()
+                .expectBody(User.class)
+                .isEqualTo(User.getBuilder().account("tzrb052775").name("D Test 0").password("111222").build());
 	}
 
 	@Test

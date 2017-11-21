@@ -56,16 +56,12 @@ public class UserHandler {
         Mono<AccountRequest> accountRequest = serverRequest.bodyToMono(AccountRequest.class);
         Mono<User> user = userRepository.findByAccount(accountRequest.map(a -> a.getAccountId()));
         return user.then(ServerResponse.ok().body(user, User.class));
-        /*return ServerResponse
-                .ok()
-                .body(user, User.class);*/
     }
 
     public Mono<ServerResponse> changePwd(ServerRequest serverRequest) {
         Mono<PasswordRequest> passwordRequest = serverRequest.bodyToMono(PasswordRequest.class);
         Mono<User> user = userRepository
                 .findByAccount(passwordRequest.map(a -> a.getAccountId()));
-
         return user.then(ServerResponse.ok().body(user, User.class));
         /*return ServerResponse
                 .ok()
