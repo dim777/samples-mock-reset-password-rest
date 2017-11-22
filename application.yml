@@ -11,6 +11,7 @@ spring:
 
 app:
   changelog: ru.techlab.mock.samples.reset.password.changelogs
+  pdffile: "files/forma-2-ndfl.pdf"
 
 logging:
   level:

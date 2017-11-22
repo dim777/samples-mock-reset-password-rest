@@ -14,7 +14,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
  * Created by rb052775 on 07.11.2017.
  */
 @Configuration
-public class ArticleRouter {
+public class UserRouter {
 
     @Bean
     public RouterFunction<ServerResponse> User(UserHandler userHandler){

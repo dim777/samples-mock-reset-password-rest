@@ -3,26 +3,16 @@ package ru.techlab.mock.samples.reset.password.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 import ru.techlab.mock.samples.reset.password.model.User;
 import ru.techlab.mock.samples.reset.password.model.wrapper.AccountRequest;
-import ru.techlab.mock.samples.reset.password.model.wrapper.PasswordRequest;
-import ru.techlab.mock.samples.reset.password.model.wrapper.results.PasswordChangeResult;
-import ru.techlab.mock.samples.reset.password.model.wrapper.results.PwdChangeType;
 import ru.techlab.mock.samples.reset.password.repository.UserRepository;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
-import static org.springframework.http.MediaType.TEXT_PLAIN;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Component
