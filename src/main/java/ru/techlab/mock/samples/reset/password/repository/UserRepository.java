@@ -1,8 +1,11 @@
 package ru.techlab.mock.samples.reset.password.repository;
 
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 import ru.techlab.mock.samples.reset.password.model.User;
+
+import java.util.Optional;
 
 /**
  * Created by Dmitry.Erohin dim777@ya.ru on 28.03.2017.
@@ -11,4 +14,8 @@ import ru.techlab.mock.samples.reset.password.model.User;
  */
 public interface UserRepository extends ReactiveMongoRepository<User, String> {
     Mono<User> findByAccount(Mono<String> account);
+
+    @Query("{ 'account' : ?0 }")
+    Mono<User> findByAccountBlock(String account);
+
 }

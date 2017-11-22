@@ -24,7 +24,6 @@ public class ArticleRouter {
                  .andRoute(GET("/users").and(accept(APPLICATION_STREAM_JSON)), userHandler::streamUsers)
                  .andRoute(POST("/users").and(accept(APPLICATION_JSON_UTF8)), userHandler::createUser)
                  .andRoute(POST("/users/check"), userHandler::checkUser)
-                 .andRoute(POST("/users/pwd"), userHandler::changePwd)
                  .andRoute(POST("/users/json"), userHandler::createUser);
                 //.andNest(path("/article/json"), restfulRouter);
     }

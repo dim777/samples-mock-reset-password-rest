@@ -11,9 +11,13 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import ru.techlab.mock.samples.reset.password.model.User;
 import ru.techlab.mock.samples.reset.password.model.wrapper.AccountRequest;
 import ru.techlab.mock.samples.reset.password.model.wrapper.PasswordRequest;
+import ru.techlab.mock.samples.reset.password.model.wrapper.results.PasswordChangeResult;
+import ru.techlab.mock.samples.reset.password.model.wrapper.results.PwdChangeType;
 import ru.techlab.mock.samples.reset.password.repository.UserRepository;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -33,38 +37,29 @@ public class UserHandler {
                 .body(BodyInserters.fromObject("Hello World!"));
     }
 
-    public Mono<ServerResponse> streamUsers(ServerRequest request) {
+    public Mono<ServerResponse> streamUsers(final ServerRequest request) {
         return ok()
                 .contentType(APPLICATION_STREAM_JSON)
                 .body(userRepository.findAll(), User.class);
     }
 
-    public Mono<ServerResponse> fetchUser(ServerRequest request) {
+    public Mono<ServerResponse> fetchUser(final ServerRequest request) {
         int size = Integer.parseInt(request.queryParam("size").orElse("10"));
         return ok()
                 .contentType(APPLICATION_JSON)
                 .body(userRepository.findAll().take(size), User.class);
     }
 
-    public Mono<ServerResponse> createUser(ServerRequest serverRequest) {
-        Flux<User> user = serverRequest.bodyToFlux(User.class);
+    public Mono<ServerResponse> createUser(final ServerRequest serverRequest) {
+        Mono<User> user = serverRequest.bodyToMono(User.class);
         userRepository.insert(user);
         return ServerResponse.ok().build();
     }
 
-    public Mono<ServerResponse> checkUser(ServerRequest serverRequest) {
+    public Mono<ServerResponse> checkUser(final ServerRequest serverRequest) {
         Mono<AccountRequest> accountRequest = serverRequest.bodyToMono(AccountRequest.class);
-        Mono<User> user = userRepository.findByAccount(accountRequest.map(a -> a.getAccountId()));
-        return user.then(ServerResponse.ok().body(user, User.class));
-    }
-
-    public Mono<ServerResponse> changePwd(ServerRequest serverRequest) {
-        Mono<PasswordRequest> passwordRequest = serverRequest.bodyToMono(PasswordRequest.class);
         Mono<User> user = userRepository
-                .findByAccount(passwordRequest.map(a -> a.getAccountId()));
+                .findByAccount(accountRequest.map(a -> a.getAccountId()));
         return user.then(ServerResponse.ok().body(user, User.class));
-        /*return ServerResponse
-                .ok()
-                .body(user, User.class);*/
     }
 }
