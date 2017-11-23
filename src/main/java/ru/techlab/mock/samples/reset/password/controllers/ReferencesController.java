@@ -26,7 +26,7 @@ public class ReferencesController {
     @Value("${app.pdffile}")
     private String filePath;
 
-    @GetMapping("/references/{type}")
+    @PostMapping("/references/{type}")
     public Mono<ResponseEntity<byte[]>> getReference(@PathVariable final String type, @RequestBody final ReferenceRequest referenceRequest) throws IOException {
         switch (type){
             case "2ndfl": {
